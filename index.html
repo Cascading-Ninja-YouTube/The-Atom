@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3d Preloader</title>
+
+    <style>
+     
+		body
+		{
+			background: url(https://images.unsplash.com/photo-1579546929662-711aa81148cf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80) ;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            backdrop-filter: brightness(55%);
+			margin: 0;
+			padding: 0;
+            animation: bg 30s infinite;
+		
+		}
+        @keyframes bg 
+        {
+            0%
+            {
+                background: url(https://images.unsplash.com/photo-1579546929662-711aa81148cf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80) ;
+            }
+            20%
+            {
+                background: url(https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1015&q=80) ;
+            }
+            40%
+            {
+                background: url(https://images.pexels.com/photos/1526/dark-blur-blurred-gradient.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940) ;
+            }
+            60%
+            {
+                background: url(https://cdn.pixabay.com/photo/2015/04/15/01/28/background-723053_1280.jpg) ;
+            }
+            80%
+            {
+                background: url(https://images.pexels.com/photos/3970396/pexels-photo-3970396.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940) ;
+            }
+            100%
+            {
+                background: url(https://images.unsplash.com/photo-1579546929662-711aa81148cf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80) ;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div id="world"></div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.js" integrity="sha512-tmdOKTY7I6MOUcCL/9fa4s+BnBCgEuifJImOX46m36+rxVMcgHEPGLVoCXHR6ZvjcKGoVixEiBKE4LcYLnv0Cw==" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.netlify.app/OrbitControls.js"></script>
+
+<script>
+	const container =document.getElementById('world')
+	var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(50,window.innerWidth / window.innerHeight,.1,1000)
+    camera.position.z = 85;
+    camera.position.y = -5;
+
+    var renderer = new THREE.WebGLRenderer({antialias: true, alpha:true});        
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    window.addEventListener('resize', () => {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.aspect = window.innerWidth / window.innerHeight;
+
+        camera.updateProjectionMatrix();
+    })
+
+
+
+    const geometry = new THREE.SphereGeometry( 4, 55, 32 );
+    const material = new THREE.MeshPhongMaterial( {color: `#e5e5e5`} );
+    const sphere = new THREE.Mesh( geometry, material );
+    sphere.receiveShadow=true;
+
+    const geometry1 = new THREE.SphereGeometry( 2, 55, 32 );
+    const material1 = new THREE.MeshPhongMaterial( {color: `#1d41e2`} );
+    const sphere1 = new THREE.Mesh( geometry1, material1 );
+
+    const geometry2 = new THREE.SphereGeometry( 2, 55, 32 );
+    const material2 = new THREE.MeshPhongMaterial( {color: `#f0a50f`} );
+    const sphere2 = new THREE.Mesh( geometry2, material2 );
+
+    const geometry3 = new THREE.SphereGeometry( 2, 55, 32 );
+    const material3 = new THREE.MeshPhongMaterial( {color: `#3cc367`} );
+    const sphere3 = new THREE.Mesh( geometry3, material3 );
+
+    const geometry4 = new THREE.SphereGeometry( 2, 55, 42 );
+    const material4 = new THREE.MeshPhongMaterial( {color: `#bb6868`} );
+    const sphere4 = new THREE.Mesh( geometry4, material4 );
+
+    sphere1.castShadow=true;
+    sphere2.castShadow=true;
+    sphere3.castShadow=true;
+    sphere4.castShadow=true;
+
+    scene.add(sphere,sphere1,sphere2,sphere3,sphere4);
+
+    const ambient = new THREE.AmbientLight( 0x404040 ); // soft white light
+    scene.add( ambient );
+
+    var light = new THREE.PointLight(`#e5e5e5`, 0.5,500)
+    light.position.set(40, 20, 55);
+    scene.add(light);
+
+
+    // `red`,`blue`,1
+    // `#0f0c29`,`#24243e`,2
+    // `#000`,`#e5e5e5`,1
+    // `#52c234`,`#061700`,1
+    // `#20002c`,`#cbb4d4`,3
+    const lightHem = new THREE.HemisphereLight( `red`,`blue`,1);
+    scene.add( lightHem );
+
+    // Orbit Controls
+    var controls = new THREE.OrbitControls( camera, renderer.domElement );
+    controls.maxPolarAngle = Math.PI / 3;
+    controls.minPolarAngle = Math.PI /2;
+    controls.enableDamping = true;
+    controls.dampingFactor=2.2;
+    controls.enablePan =false;
+    controls.panSpeed=5;
+    controls.maxZoom=1;
+    controls.minZoom=1;
+    controls.dampingFactor = 0.1;
+
+
+
+    var render = function() {
+        requestAnimationFrame(render);
+
+        sphere.rotation.x = 45;
+        sphere.rotation.z = 45;
+
+        sphere1.position.x =15;
+        sphere1.position.z =15;
+        
+        sphere2.position.x =25;
+        sphere2.position.z =-15;
+
+        sphere.rotation.y += 0.01;
+        sphere.rotation.x += 0.01;
+
+        sphere1.rotation.y -= 0.01;
+        sphere1.rotation.x -= 0.01;
+
+        sphere1.position.x=10 * Math.sin(Date.now() / 550);
+        sphere1.position.y=2 * Math.cos(Date.now() / 550);
+        sphere1.position.z=5 * Math.cos(Date.now() / 550);
+
+       
+        sphere2.position.x=-14.5 * Math.sin(Date.now() / 1400);
+        sphere2.position.y=-12.5 * Math.sin(Date.now() / 1400);
+        sphere2.position.z=16* Math.cos(Date.now() / 1400);
+
+        sphere3.position.x=1 * Math.sin(Date.now() / 1400);
+        sphere3.position.y=15 * Math.sin(Date.now() / 800);
+        sphere3.position.z=-13 * Math.cos(Date.now() / 900);
+
+        sphere4.position.x=16.6 * Math.cos(Date.now() / 900);
+        sphere4.position.y=-19 * Math.cos(Date.now() / 900);
+        sphere4.position.z=-24 * Math.sin(Date.now() / 900);
+        
+        lightHem.position.x = 5 * Math.sin(Date.now() / 450);
+        lightHem.position.z = 5 * Math.cos(Date.now() / 450);
+     
+        controls.update();
+        renderer.render(scene, camera);
+    }
+
+
+    render();
+
+
+
+</script>   
+  
+</body>
+</html>
